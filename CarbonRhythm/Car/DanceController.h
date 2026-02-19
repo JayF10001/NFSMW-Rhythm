@@ -10,6 +10,14 @@ namespace Dance
         float spinEaseSpeed
     );
 
+    void ApplyConfig(
+        double jellyBPM,
+        double returnSpeed,
+        double inputSpeed,
+        double spinLinearSpeed,
+        double spinEaseSpeed
+    );
+
     void Initialize();
     void Update(float dt);
     void Toggle();

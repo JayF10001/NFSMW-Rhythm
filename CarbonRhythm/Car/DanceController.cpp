@@ -248,5 +248,18 @@ namespace Dance
 
     }
 
+    void ApplyConfig(
+        double jellyBPM,
+        double returnSpeed,
+        double inputSpeed,
+        double spinLinearSpeed,
+        double spinEaseSpeed)
+    {
+        gJellyBPM = jellyBPM;
+        gReturnSpeed = returnSpeed;
+        gInputSpeed = inputSpeed;
+        gSpinLinearSpeed = spinLinearSpeed;
+        gSpinEaseSpeed = spinEaseSpeed;
+    }
 
 }

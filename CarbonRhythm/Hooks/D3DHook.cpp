@@ -9,6 +9,10 @@
 #include "Car/DanceController.h"
 #include <Core/GameTime.h>
 #include "Rhythm/BeatmapRecorder.h"
+#include <Core/Config.h>
+#include "UI/MenuSystem.h"
+#include <Core/GameState.h>
+
 
 
 
@@ -19,82 +23,17 @@ EndScene_t oEndScene = nullptr;
 
 HRESULT __stdcall hkEndScene(IDirect3DDevice9* pDevice)
 {
-    static bool gSystemActive = false;
-    static bool gPrevF2 = false;
     static bool gInitialized = false;
-
+    static bool gPrevMenuToggle = false;
     static bool gRecordMode = false;
-    static bool gPrevF3 = false;
-    static bool gPrevF4 = false;
+    static bool gIsPlaying = false;
+
+    const auto& keys = Config::GetKeys();
+    const auto& rec = Config::GetRecorder();
 
     HRESULT result = oEndScene(pDevice);
 
-    bool f2 = (GetAsyncKeyState(VK_F2) & 0x8000) != 0;
-    bool f3 = (GetAsyncKeyState(VK_F3) & 0x8000) != 0;
-    bool f4 = (GetAsyncKeyState(VK_F4) & 0x8000) != 0;
-
-    // ===== INIT AUDIO ONCE =====
-    if (!gInitialized)
-    {
-        Audio::Initialize();
-        gInitialized = true;
-    }
-
-    // ==============================
-    // ===== PLAY MODE TOGGLE (F2)
-    // ==============================
-    if (f2 && !gPrevF2 && !gRecordMode)
-    {
-        gSystemActive = !gSystemActive;
-
-        if (gSystemActive)
-        {
-            Rhythm::Initialize();
-            Beatmap::Load("CarbonRhythmAssets/maps/sophie.json");
-            Audio::Play();
-            Dance::SetEnabled(true);
-        }
-        else
-        {
-            Audio::Stop();
-            Rhythm::Initialize();
-            Dance::SetEnabled(false);
-        }
-    }
-
-    gPrevF2 = f2;
-
-    // ==============================
-    // ===== RECORD MODE START (F3)
-    // ==============================
-    if (f3 && !gPrevF3 && !gSystemActive)
-    {
-        gRecordMode = true;
-
-        Rhythm::Initialize();
-        Audio::Stop();
-        Audio::Play();
-
-        Recorder::Start(120.0, -0.05);
-    }
-
-    // ==============================
-    // ===== RECORD MODE STOP (F4)
-    // ==============================
-    if (f4 && !gPrevF4 && gRecordMode)
-    {
-        gRecordMode = false;
-        Recorder::Stop("CarbonRhythmAssets/maps/output.json");
-        Audio::Stop();
-    }
-
-    gPrevF3 = f3;
-    gPrevF4 = f4;
-
-    // ==================================
-    // ===== FRAME UPDATE SECTION
-    // ==================================
-
+    // ===== time delta =====
     static uint64_t lastTick = 0;
     uint64_t tick = bGetTicker();
 
@@ -108,19 +47,65 @@ HRESULT __stdcall hkEndScene(IDirect3DDevice9* pDevice)
 
     Input::Update();
 
-    if (gRecordMode)
+    static bool gPrevToggle = false;
+
+    bool toggle = (GetAsyncKeyState(keys.MenuToggle) & 0x8000) != 0;
+
+    if (toggle && !gPrevToggle)
     {
-        Recorder::Update();
+        if (Game::GetState() == GameState::Inactive)
+        {
+            Game::SetState(GameState::Menu);
+        }
+        else if (Game::GetState() == GameState::Menu)
+        {
+            Game::SetState(GameState::Inactive);
+        }
+        else if (Game::GetState() == GameState::Playing)
+        {
+            Audio::Stop();
+            Dance::SetEnabled(false);
+            Game::SetState(GameState::Menu);
+        }
     }
-    else if (gSystemActive)
+
+    gPrevToggle = toggle;
+
+    switch (Game::GetState())
     {
+    case GameState::Inactive:
+        break; // do nothing
+
+    case GameState::Menu:
+        Menu::Update(dt);
+        Menu::Render(pDevice);
+        break;
+
+    case GameState::Playing:
         Rhythm::Update();
         Dance::Update(dt);
         Overlay::Render(pDevice);
-    }
+        break;
+
+    case GameState::Recording:
+        Recorder::Update();   // <<< WAJIB dipanggil selalu
+
+        if (Recorder::GetState() == Recorder::RecorderState::Idle)
+        {
+            Recorder::RenderInfo(pDevice);
+        }
+        else
+        {
+            Dance::Update(dt);
+            Overlay::Render(pDevice);
+        }
+        break;
+
 
     return result;
+    }
 }
+
 
 
 typedef HRESULT(__stdcall* Reset_t)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
@@ -129,10 +114,16 @@ Reset_t oReset = nullptr;
 HRESULT __stdcall hkReset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pp)
 {
     Overlay::OnLostDevice();
+    Menu::OnLostDevice();
+    Recorder::OnLostDevice();
+
 
     HRESULT hr = oReset(device, pp);
 
     Overlay::OnResetDevice();
+    Menu::OnResetDevice();
+    Recorder::OnResetDevice();
+
 
     return hr;
 }
@@ -163,31 +154,13 @@ void D3DHook::Initialize()
 
     GetModuleFileNameA(hModule, path, MAX_PATH);
 
+    Config::Load();
 
-    char* p = strrchr(path, '\\');
-    if (p) *(p + 1) = 0;
-    lstrcatA(path, "CarbonRhythm.ini");
-
-    char buf[8];
-
-    int slowSpin = GetPrivateProfileIntA("Controls", "SlowSpin", 85, path);
-    Input::SetKey(0, slowSpin);
-
-    int left = GetPrivateProfileIntA("Controls", "Left", 74, path);
-    Input::SetKey(1, left);
-
-    int down = GetPrivateProfileIntA("Controls", "Down", 75, path);
-    Input::SetKey(2, down);
-
-    int up = GetPrivateProfileIntA("Controls", "Up", 73, path);
-    Input::SetKey(3, up);
-
-    int right = GetPrivateProfileIntA("Controls", "Right", 76, path);
-    Input::SetKey(4, right);
-
-    int quickSpin = GetPrivateProfileIntA("Controls", "QuickSpin", 79, path);
-    Input::SetKey(5, quickSpin);
-
+    const auto& keys = Config::GetKeys();
+    for (int i = 0; i < 6; i++)
+    {
+        Input::SetKey(i, keys.Lane[i]);
+    }
 
 
 

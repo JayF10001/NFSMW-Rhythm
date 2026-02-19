@@ -8,4 +8,5 @@ namespace Audio
     void Play();
     void Stop();
     double GetPositionSeconds();
+    bool IsFinished();
 }

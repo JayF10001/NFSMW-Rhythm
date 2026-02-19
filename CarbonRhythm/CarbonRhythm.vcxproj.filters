@@ -31,6 +31,9 @@
     <Filter Include="Audio">
       <UniqueIdentifier>{12468488-99ba-48bd-b621-92eeaa8501b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{c9c9a7cc-28f2-49ad-a9e9-a8130e169bfb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -78,6 +81,15 @@
     <ClInclude Include="Rhythm\BeatmapRecorder.h">
       <Filter>Rhythm</Filter>
     </ClInclude>
+    <ClInclude Include="UI\MenuSystem.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Config.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\GameState.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -124,6 +136,15 @@
     </ClCompile>
     <ClCompile Include="Rhythm\BeatmapRecorder.cpp">
       <Filter>Rhythm</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\MenuSystem.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Config.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\GameState.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

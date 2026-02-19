@@ -60,4 +60,9 @@ namespace Audio
         QWORD pos = BASS_ChannelGetPosition(gStream, BASS_POS_BYTE);
         return BASS_ChannelBytes2Seconds(gStream, pos);
     }
+    bool IsFinished()
+    {
+        if (!gStream) return true;
+        return BASS_ChannelIsActive(gStream) == BASS_ACTIVE_STOPPED;
+    }
 }
