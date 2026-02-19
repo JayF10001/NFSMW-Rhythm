@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="CarbonRhythm/CarbonRhythm.vcxproj" Id="eae4ca98-df20-49d6-9f3f-d0689aa3c4c8" />
+</Solution>

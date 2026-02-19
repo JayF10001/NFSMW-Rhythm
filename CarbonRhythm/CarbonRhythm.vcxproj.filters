@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Hooks">
+      <UniqueIdentifier>{691257b9-d605-4810-b9af-1560186bb037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rhythm">
+      <UniqueIdentifier>{a84823b3-5750-4130-b336-56182052f407}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{38549c4b-4140-41ce-95a3-091621e85e06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Car">
+      <UniqueIdentifier>{8ceba0d7-728a-4af7-8a68-a6e0a3d6ba2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{c3d71e70-2cfd-4352-9243-6b476920c150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{12468488-99ba-48bd-b621-92eeaa8501b3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooks\D3DHook.h">
+      <Filter>Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="Rhythm\Judge.h">
+      <Filter>Rhythm</Filter>
+    </ClInclude>
+    <ClInclude Include="Rhythm\Metronome.h">
+      <Filter>Rhythm</Filter>
+    </ClInclude>
+    <ClInclude Include="Rhythm\MusicPlayer.h">
+      <Filter>Rhythm</Filter>
+    </ClInclude>
+    <ClInclude Include="Rhythm\RhythmSystem.h">
+      <Filter>Rhythm</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\overlay.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\GameTime.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Rhythm\Input.h">
+      <Filter>Rhythm</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioSystem.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Rhythm\BeatmapLoader.h">
+      <Filter>Rhythm</Filter>
+    </ClInclude>
+    <ClInclude Include="Car\DanceController.h">
+      <Filter>Car</Filter>
+    </ClInclude>
+    <ClInclude Include="Rhythm\BeatmapRecorder.h">
+      <Filter>Rhythm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hooks\D3DHook.cpp">
+      <Filter>Hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="Rhythm\Judge.cpp">
+      <Filter>Rhythm</Filter>
+    </ClCompile>
+    <ClCompile Include="Rhythm\Metronome.cpp">
+      <Filter>Rhythm</Filter>
+    </ClCompile>
+    <ClCompile Include="Rhythm\MusicPlayer.cpp">
+      <Filter>Rhythm</Filter>
+    </ClCompile>
+    <ClCompile Include="Rhythm\RhythmSystem.cpp">
+      <Filter>Rhythm</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\overlay.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\GameTime.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Rhythm\Input.cpp">
+      <Filter>Rhythm</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioSystem.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Rhythm\BeatmapLoader.cpp">
+      <Filter>Rhythm</Filter>
+    </ClCompile>
+    <ClCompile Include="Car\DanceController.cpp">
+      <Filter>Car</Filter>
+    </ClCompile>
+    <ClCompile Include="Rhythm\BeatmapRecorder.cpp">
+      <Filter>Rhythm</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
