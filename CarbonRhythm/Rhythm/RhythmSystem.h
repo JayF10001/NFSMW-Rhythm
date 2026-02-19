@@ -35,4 +35,6 @@ namespace Rhythm
     void SetBPM(double value);
     void SetOffset(double value);
     void SetJudgementWindows(double perfect, double good, double bad);
+    int GetMultiplier();
+    static void UpdateMultiplier();
 }

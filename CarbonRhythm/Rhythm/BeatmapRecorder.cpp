@@ -66,6 +66,10 @@ namespace Recorder
 
         json j;
 
+        j["title"] = rec.Title;
+        j["artist"] = rec.Artist;
+        j["difficultyName"] = rec.DifficultyName;
+
         j["audio"] = rec.AudioPath;
         j["bpm"] = gBPM;
         j["offset"] = gOffset;

@@ -51,6 +51,10 @@ namespace Config
         int StartKey;
         int BackKey;
         int StopKey;
+
+        std::string Title;
+        std::string Artist;
+        std::string DifficultyName;
     };
 
 

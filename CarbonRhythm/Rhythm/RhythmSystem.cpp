@@ -22,6 +22,9 @@ namespace Rhythm
     static double goodWindow = 0.075;  // 60ms
     static double badWindow = 0.115;  // 100ms
 
+    static int multiplier = 1;
+    static const int maxMultiplier = 20;
+
     static bool windowActive = false;
 
     static int score = 0;
@@ -132,20 +135,23 @@ namespace Rhythm
                 {
                     if (fabs(diff) <= perfectWindow)
                     {
-                        score += 300;
                         combo++;
+                        UpdateMultiplier();
+                        score += 300 * multiplier;
                         lastJudgement = Judgement::Perfect;
                     }
                     else if (fabs(diff) <= goodWindow)
                     {
-                        score += 150;
                         combo++;
+                        UpdateMultiplier();
+                        score += 150 * multiplier;
                         lastJudgement = Judgement::Good;
                     }
                     else
                     {
                         score += 50;
                         combo = 0;
+                        multiplier = 1;
                         lastJudgement = Judgement::Bad;
                     }
 
@@ -158,6 +164,7 @@ namespace Rhythm
                 else
                 {
                     combo = 0;
+                    multiplier = 1;
                     lastResultSuccess = false;
                     lastJudgement = Judgement::Miss;
                     resultFlashTimer = 0.2f;
@@ -269,5 +276,15 @@ namespace Rhythm
         goodWindow = good;
         badWindow = bad;
     }
+
+    static void UpdateMultiplier()
+    {
+        multiplier = 1 + (combo / 10);
+
+        if (multiplier > maxMultiplier)
+            multiplier = maxMultiplier;
+    }
+
+    int GetMultiplier() { return multiplier; }
 
 }

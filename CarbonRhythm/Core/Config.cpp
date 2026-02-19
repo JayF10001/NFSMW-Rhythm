@@ -107,6 +107,14 @@ namespace Config
             ReadDouble("Dance", "SpinLinearSpeed", 0.3);
         gRecorder.Dance.SpinEaseSpeed =
             ReadDouble("Dance", "SpinEaseSpeed", 2.0);
+        gRecorder.Title =
+            ReadString("Metadata", "Title", "Untitled");
+
+        gRecorder.Artist =
+            ReadString("Metadata", "Artist", "Unknown");
+
+        gRecorder.DifficultyName =
+            ReadString("Metadata", "DifficultyName", "Normal");
     }
 
     void Reload()

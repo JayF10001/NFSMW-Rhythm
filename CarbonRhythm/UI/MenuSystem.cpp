@@ -80,8 +80,10 @@ namespace
             file >> j;
 
             std::string title = j.value("title", fileName);
+            std::string artist = j.value("artist", "Unknown");
+            std::string diff = j.value("difficultyName", "Normal");
 
-            gBeatmaps.push_back({ fullPath, title });
+            gBeatmaps.push_back({ fullPath, title, artist, diff });
 
         } while (FindNextFileA(hFind, &findData));
 
@@ -264,21 +266,41 @@ namespace Menu
 
             for (int i = 0; i < (int)gBeatmaps.size(); i++)
             {
-                RECT itemRect = { 120, 150 + i * 40, 800, 200 };
+                int baseY = 150 + i * 60;
+
+                RECT line1 = { 120, baseY, 800, baseY + 30 };
+                RECT line2 = { 140, baseY + 25, 800, baseY + 50 };
 
                 D3DCOLOR color = (i == gBeatmapSelection)
                     ? D3DCOLOR_ARGB(255, 0, 255, 255)
                     : D3DCOLOR_ARGB(255, 255, 255, 255);
 
+                std::string mainLine =
+                    gBeatmaps[i].artist + " - " +
+                    gBeatmaps[i].title;
+
+                std::string diffLine =
+                    "Difficulty: " + gBeatmaps[i].difficulty;
+
                 gFont->DrawTextA(
                     gSprite,
-                    gBeatmaps[i].title.c_str(),
+                    mainLine.c_str(),
                     -1,
-                    &itemRect,
+                    &line1,
                     DT_LEFT | DT_NOCLIP,
                     color
                 );
+
+                gFont->DrawTextA(
+                    gSprite,
+                    diffLine.c_str(),
+                    -1,
+                    &line2,
+                    DT_LEFT | DT_NOCLIP,
+                    D3DCOLOR_ARGB(200, 180, 180, 180)
+                );
             }
+
         }
 
         gSprite->End();
