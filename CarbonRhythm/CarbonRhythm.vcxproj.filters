@@ -90,6 +90,9 @@
     <ClInclude Include="Core\GameState.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Rhythm\ScoreSystem.h">
+      <Filter>Rhythm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -145,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="Core\GameState.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Rhythm\ScoreSystem.cpp">
+      <Filter>Rhythm</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

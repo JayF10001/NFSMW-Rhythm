@@ -42,6 +42,7 @@ static float EaseInOutQuart(float t)
         : 1.0f - 8.0f * (--t) * t * t * t;
 }
 
+static JellyEaseType gJellyEase = JellyEaseType::EaseOut;
 
 namespace Dance
 {
@@ -127,6 +128,7 @@ namespace Dance
             gJellyBack = false;
         }
     }
+
 
     void Update(float dt)
     {
@@ -261,5 +263,53 @@ namespace Dance
         gSpinLinearSpeed = spinLinearSpeed;
         gSpinEaseSpeed = spinEaseSpeed;
     }
+
+    void SetJellyEase(JellyEaseType type)
+    {
+        gJellyEase = type;
+    }
+
+    static float ApplyEase(float t)
+{
+    switch (gJellyEase)
+    {
+    case JellyEaseType::Linear:
+        return t;
+
+    case JellyEaseType::EaseOut:
+        return 1.0f - powf(1.0f - t, 3.0f);
+
+    case JellyEaseType::EaseInOut:
+        if (t < 0.5f)
+            return 4 * t * t * t;
+        else
+            return 1 - powf(-2 * t + 2, 3) / 2;
+
+    case JellyEaseType::Elastic:
+        return sinf(-13.0f * (t + 1) * 3.14159f / 2) * powf(2.0f, -10.0f * t) + 1;
+
+    case JellyEaseType::Bounce:
+        if (t < 0.3636f)
+            return 7.5625f * t * t;
+        else if (t < 0.7272f)
+        {
+            t -= 0.5454f;
+            return 7.5625f * t * t + 0.75f;
+        }
+        else if (t < 0.9090f)
+        {
+            t -= 0.8181f;
+            return 7.5625f * t * t + 0.9375f;
+        }
+        else
+        {
+            t -= 0.9545f;
+            return 7.5625f * t * t + 0.984375f;
+        }
+    }
+
+    return t;
+}
+
 
 }

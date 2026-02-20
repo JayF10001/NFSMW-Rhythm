@@ -6,6 +6,10 @@
 #include "Core/GameTime.h"
 #include "Input.h"
 #include "Audio/AudioSystem.h"
+#include <Core/GameState.h>
+#include <Car/DanceController.h>
+#include "ScoreSystem.h"
+#include <Core/Game.h>
 
 extern uint64_t bGetTicker();
 extern float& TicksToMilliseconds;
@@ -16,11 +20,11 @@ namespace Rhythm
     static uint64_t lastTick = 0;
     static float timer = 0.0f;
     static int currentBeat = -1;
-    static float bpm = 140.0f;
+    static double bpm = 140.0;
 
-    static double perfectWindow = 0.045;  // 30ms
-    static double goodWindow = 0.075;  // 60ms
-    static double badWindow = 0.115;  // 100ms
+    static double perfectWindow = 0.045;
+    static double goodWindow = 0.075;
+    static double badWindow = 0.115;
 
     static int multiplier = 1;
     static const int maxMultiplier = 20;
@@ -31,6 +35,17 @@ namespace Rhythm
     static int combo = 0;
     static bool lastResultSuccess = false;
     static float resultFlashTimer = 0.0f;
+
+    static bool songFinished = false;
+    static float finishTimer = 0.0f;
+
+    static int totalNotes = 0;
+    static int hitPerfect = 0;
+    static int hitGood = 0;
+    static int hitBad = 0;
+    static int hitMiss = 0;
+
+    static int maxCombo = 0;
 
     struct Note
     {
@@ -58,6 +73,17 @@ namespace Rhythm
 
         notes.clear();
         nextNoteIndex = 0;
+
+        songFinished = false;
+        finishTimer = 0.0f;
+
+        totalNotes = 0;
+        hitPerfect = 0;
+        hitGood = 0;
+        hitBad = 0;
+        hitMiss = 0;
+        maxCombo = 0;
+        multiplier = 1;
     }
 
 
@@ -81,7 +107,17 @@ namespace Rhythm
     void Update()
     {
         timer = Audio::GetPositionSeconds() + audioOffset;
-        float dt = 0.0f; // sementara biar compile
+        static uint64_t lastTick = 0;
+        uint64_t tick = bGetTicker();
+
+        if (lastTick == 0)
+            lastTick = tick;
+
+        uint64_t delta = tick - lastTick;
+        lastTick = tick;
+
+        float dt = (delta * TicksToMilliseconds) / 1000.0f;
+
 
 
         float secondsPerBeat = 60.0f / bpm;
@@ -100,6 +136,9 @@ namespace Rhythm
 
                 note.hit = true;
                 nextNoteIndex++;
+                multiplier = 1;
+                hitMiss++;
+                totalNotes++;
             }
             else
                 break;
@@ -112,13 +151,11 @@ namespace Rhythm
         if (inWindow && !windowActive)
         {
             windowActive = true;
-            OutputDebugStringA("WINDOW OPEN\n");
         }
 
         if (!inWindow && windowActive)
         {
             windowActive = false;
-            OutputDebugStringA("WINDOW CLOSE\n");
         }
 
         int pressedMask = Input::GetPressedMask();
@@ -139,6 +176,10 @@ namespace Rhythm
                         UpdateMultiplier();
                         score += 300 * multiplier;
                         lastJudgement = Judgement::Perfect;
+                        hitPerfect++;
+                        totalNotes++;
+                        if (combo > maxCombo)
+                            maxCombo = combo;
                     }
                     else if (fabs(diff) <= goodWindow)
                     {
@@ -146,6 +187,10 @@ namespace Rhythm
                         UpdateMultiplier();
                         score += 150 * multiplier;
                         lastJudgement = Judgement::Good;
+                        hitGood++;
+                        totalNotes++;
+                        if (combo > maxCombo)
+                            maxCombo = combo;
                     }
                     else
                     {
@@ -153,6 +198,8 @@ namespace Rhythm
                         combo = 0;
                         multiplier = 1;
                         lastJudgement = Judgement::Bad;
+                        hitBad++;
+                        totalNotes++;
                     }
 
                     lastResultSuccess = true;
@@ -171,6 +218,8 @@ namespace Rhythm
 
                     note.hit = true;
                     nextNoteIndex++;
+                    hitMiss++;
+                    totalNotes++;
                 }
             }
         }
@@ -180,6 +229,38 @@ namespace Rhythm
 
         if (resultFlashTimer > 0.0f)
             resultFlashTimer -= dt;
+
+        // check if beatmap done
+        if (!songFinished && nextNoteIndex >= notes.size())
+        {
+            songFinished = true;
+            finishTimer = 3.0f; // 3 seconds delay
+        }
+
+        if (songFinished)
+        {
+            finishTimer -= dt;
+
+            if (finishTimer <= 0.0f)
+            {
+                songFinished = false;
+
+                Audio::Stop();
+                Dance::SetEnabled(false);
+
+                double accuracy = GetAccuracy();
+
+                Score::Save(
+                    Game::GetCurrentBeatmapId(),
+                    GetScore(),
+                    maxCombo,
+                    accuracy
+                );
+
+                Game::SetState(GameState::Menu);
+            }
+        }
+
     }
 
     int GetScore() { return score; }
@@ -286,5 +367,17 @@ namespace Rhythm
     }
 
     int GetMultiplier() { return multiplier; }
+
+    double GetAccuracy()
+    {
+        if (totalNotes == 0) return 0.0;
+
+        double weighted =
+            hitPerfect * 1.0 +
+            hitGood * 0.7 +
+            hitBad * 0.4;
+
+        return (weighted / totalNotes) * 100.0;
+    }
 
 }

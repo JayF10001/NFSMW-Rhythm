@@ -9,6 +9,7 @@
 
 static LPD3DXFONT gFont = nullptr;
 static LPDIRECT3DTEXTURE9 gArrowTex[6] = { nullptr };
+static LPDIRECT3DTEXTURE9 gCornerTex = nullptr;
 static LPD3DXSPRITE gSprite = nullptr;
 
 
@@ -23,6 +24,19 @@ void Overlay::Render(IDirect3DDevice9* device)
     double currentTime = Rhythm::GetTime();
     double secondsPerBeat = Rhythm::GetSecondsPerBeat();
     double visibleRange = secondsPerBeat * 4.0; // tampilkan 4 beat ke depan
+
+    D3DVIEWPORT9 vp;
+    device->GetViewport(&vp);
+
+    float screenW = (float)vp.Width;
+    float screenH = (float)vp.Height;
+
+    const float baseW = 1920.0f;
+    const float baseH = 1080.0f;
+
+    float scaleX = screenW / baseW;
+    float scaleY = screenH / baseH;
+
 
     if (!gFont)
     {
@@ -44,13 +58,25 @@ void Overlay::Render(IDirect3DDevice9* device)
     if (!gSprite)
     {
         D3DXCreateSprite(device, &gSprite);
+    }
 
+    if (!gArrowTex[0])
+    {
         D3DXCreateTextureFromFile(device, L"CarbonRhythmAssets/CRSpinSlow.png", &gArrowTex[0]);
         D3DXCreateTextureFromFile(device, L"CarbonRhythmAssets/CRArrowLeft.png", &gArrowTex[1]);
         D3DXCreateTextureFromFile(device, L"CarbonRhythmAssets/CRArrowDown.png", &gArrowTex[2]);
         D3DXCreateTextureFromFile(device, L"CarbonRhythmAssets/CRArrowUp.png", &gArrowTex[3]);
         D3DXCreateTextureFromFile(device, L"CarbonRhythmAssets/CRArrowRight.png", &gArrowTex[4]);
         D3DXCreateTextureFromFile(device, L"CarbonRhythmAssets/CRSpinQuick.png", &gArrowTex[5]);
+    }
+
+    if (!gCornerTex)
+    {
+        D3DXCreateTextureFromFileA(
+            device,
+            "CarbonRhythmAssets/CRBGFade.png",
+            &gCornerTex
+        );
     }
 
     float phase = Rhythm::GetBeatPhase();
@@ -69,6 +95,38 @@ void Overlay::Render(IDirect3DDevice9* device)
     int startY = 60;
 
     int heldMask = Input::GetHeldMask();
+
+    gSprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+    D3DXMATRIX identity;
+    D3DXMatrixIdentity(&identity);
+
+    D3DXVECTOR2 scaling(scaleX, scaleY);
+    D3DXVECTOR2 pos(0, 0);
+
+    D3DXMATRIX mat;
+    D3DXMatrixTransformation2D(
+        &mat,
+        nullptr,
+        0,
+        &scaling,
+        nullptr,
+        0,
+        &pos
+    );
+
+    gSprite->SetTransform(&mat);
+
+    gSprite->Draw(
+        gCornerTex,
+        nullptr,
+        nullptr,
+        nullptr,
+        D3DCOLOR_ARGB(150, 255, 255, 255)
+    );
+
+    gSprite->SetTransform(&identity);
+    gSprite->End();
 
     for (int i = 0; i < 6; i++)
     {
@@ -103,6 +161,7 @@ void Overlay::Render(IDirect3DDevice9* device)
             0);
     }
 
+
     D3DRECT hitLine =
     {
         startX,
@@ -110,6 +169,11 @@ void Overlay::Render(IDirect3DDevice9* device)
         startX + 6 * laneWidth,
         startY + laneHeight
     };
+
+    device->Clear(1, &hitLine, D3DCLEAR_TARGET,
+        D3DCOLOR_ARGB(200, 255, 255, 255),
+        0.0f,
+        0);
 
     gSprite->Begin(D3DXSPRITE_ALPHABLEND);
 
@@ -153,13 +217,6 @@ void Overlay::Render(IDirect3DDevice9* device)
         );
 
     }
-
-
-    device->Clear(1, &hitLine, D3DCLEAR_TARGET,
-        D3DCOLOR_ARGB(200, 255, 255, 255),
-        0.0f,
-        0);
-
     
 
     // 3️⃣ NOTE MARKER (baru)
@@ -243,8 +300,6 @@ void Overlay::Render(IDirect3DDevice9* device)
 
     }
 
-    D3DXMATRIX identity;
-    D3DXMatrixIdentity(&identity);
     gSprite->SetTransform(&identity);
 
     gSprite->End();
@@ -297,6 +352,19 @@ void Overlay::OnLostDevice()
 {
     if (gSprite) gSprite->OnLostDevice();
     if (gFont) gFont->OnLostDevice();
+    if (gCornerTex)
+    {
+        gCornerTex->Release();
+        gCornerTex = nullptr;
+    }
+    for (int i = 0; i < 6; i++)
+    {
+        if (gArrowTex[i])
+        {
+            gArrowTex[i]->Release();
+            gArrowTex[i] = nullptr;
+        }
+    }
 }
 
 void Overlay::OnResetDevice()

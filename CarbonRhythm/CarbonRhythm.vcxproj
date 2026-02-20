@@ -163,6 +163,7 @@
     <ClInclude Include="Rhythm\Metronome.h" />
     <ClInclude Include="Rhythm\MusicPlayer.h" />
     <ClInclude Include="Rhythm\RhythmSystem.h" />
+    <ClInclude Include="Rhythm\ScoreSystem.h" />
     <ClInclude Include="UI\MenuSystem.h" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +189,7 @@
     <ClCompile Include="Rhythm\Metronome.cpp" />
     <ClCompile Include="Rhythm\MusicPlayer.cpp" />
     <ClCompile Include="Rhythm\RhythmSystem.cpp" />
+    <ClCompile Include="Rhythm\ScoreSystem.cpp" />
     <ClCompile Include="UI\MenuSystem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

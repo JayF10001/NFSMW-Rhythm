@@ -1,5 +1,14 @@
 #pragma once
 
+enum class JellyEaseType
+{
+    Linear = 0,
+    EaseOut,
+    EaseInOut,
+    Elastic,
+    Bounce
+};
+
 namespace Dance
 {
     void SetConfig(
@@ -23,4 +32,6 @@ namespace Dance
     void Toggle();
     bool IsEnabled();
     void SetEnabled(bool state);
+    void SetJellyEase(JellyEaseType type);
+    static float ApplyEase(float t);
 }

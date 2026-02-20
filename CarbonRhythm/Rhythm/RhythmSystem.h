@@ -37,4 +37,5 @@ namespace Rhythm
     void SetJudgementWindows(double perfect, double good, double bad);
     int GetMultiplier();
     static void UpdateMultiplier();
+    double GetAccuracy();
 }
