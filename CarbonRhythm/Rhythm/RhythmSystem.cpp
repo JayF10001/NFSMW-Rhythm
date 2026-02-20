@@ -47,14 +47,19 @@ namespace Rhythm
 
     static int maxCombo = 0;
 
+    static float gDeltaTime = 0.0f;
+
+    static int lastHitMask = 0;
+
+    static int lastHitNoteIndex = -1;
+
     struct Note
     {
         double time;
-        int keyMask;   // bitmask tombol
+        int keyMask;
         bool hit;
+        float hitVisualTimer;
     };
-
-
 
     static std::vector<Note> notes;
     static size_t nextNoteIndex = 0;
@@ -107,7 +112,6 @@ namespace Rhythm
     void Update()
     {
         timer = Audio::GetPositionSeconds() + audioOffset;
-        static uint64_t lastTick = 0;
         uint64_t tick = bGetTicker();
 
         if (lastTick == 0)
@@ -117,11 +121,20 @@ namespace Rhythm
         lastTick = tick;
 
         float dt = (delta * TicksToMilliseconds) / 1000.0f;
-
-
+        gDeltaTime = dt;
 
         float secondsPerBeat = 60.0f / bpm;
         int beat = (int)(timer / secondsPerBeat);
+
+        for (auto& note : notes)
+        {
+            if (note.hitVisualTimer > 0.0f)
+            {
+                note.hitVisualTimer -= dt;
+                if (note.hitVisualTimer < 0.0f)
+                    note.hitVisualTimer = 0.0f;
+            }
+        }
 
         while (nextNoteIndex < notes.size())
         {
@@ -134,7 +147,10 @@ namespace Rhythm
                 lastJudgement = Judgement::Miss;
                 resultFlashTimer = 0.2f;
 
+                lastHitNoteIndex = nextNoteIndex;
+
                 note.hit = true;
+                note.hitVisualTimer = 0.12f;
                 nextNoteIndex++;
                 multiplier = 1;
                 hitMiss++;
@@ -206,7 +222,15 @@ namespace Rhythm
                     resultFlashTimer = 0.2f;
 
                     note.hit = true;
+                    lastHitNoteIndex = nextNoteIndex;
+
+                    note.hit = true;
+                    note.hitVisualTimer = 0.12f;
+
                     nextNoteIndex++;
+                    lastHitMask = note.keyMask;
+
+                    lastHitMask = note.keyMask;
                 }
                 else
                 {
@@ -380,4 +404,29 @@ namespace Rhythm
         return (weighted / totalNotes) * 100.0;
     }
 
+    float GetDeltaTime()
+    {
+        return gDeltaTime;
+    }
+
+    int GetLastHitMask() { return lastHitMask; }
+
+    int GetLastHitNoteIndex()
+    {
+        return lastHitNoteIndex;
+    }
+
+    bool IsNoteHit(size_t index)
+    {
+        if (index < notes.size())
+            return notes[index].hit;
+        return false;
+    }
+
+    float GetNoteHitVisualTimer(size_t index)
+    {
+        if (index < notes.size())
+            return notes[index].hitVisualTimer;
+        return 0.0f;
+    }
 }

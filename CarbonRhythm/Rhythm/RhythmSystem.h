@@ -38,4 +38,9 @@ namespace Rhythm
     int GetMultiplier();
     static void UpdateMultiplier();
     double GetAccuracy();
+    float GetDeltaTime();
+    int GetLastHitMask();
+    int GetLastHitNoteIndex();
+    bool IsNoteHit(size_t index);
+    float GetNoteHitVisualTimer(size_t index);
 }
