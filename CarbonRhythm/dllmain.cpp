@@ -5,6 +5,7 @@
 
 DWORD WINAPI InitThread(LPVOID)
 {
+    Sleep(1000);
     Game::Initialize();
     return 0;
 }

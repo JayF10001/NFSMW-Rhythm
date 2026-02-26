@@ -88,9 +88,16 @@ namespace Beatmap
 
 
 
+        if (!Audio::Initialize())
+        {
+            OutputDebugStringA("BASS INIT FAILED\n");
+            return false;
+        }
+
         if (!Audio::Load(j["audio"]))
         {
             OutputDebugStringA("AUDIO LOAD FAILED\n");
+            return false;
         }
 
 

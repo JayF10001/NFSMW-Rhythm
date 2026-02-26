@@ -23,6 +23,7 @@ namespace Audio
 
     bool Load(const std::string& path)
     {
+        Initialize();
         if (gStream)
         {
             BASS_StreamFree(gStream);
