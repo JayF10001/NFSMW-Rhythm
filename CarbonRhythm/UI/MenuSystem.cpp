@@ -362,7 +362,7 @@ namespace Menu
 
             gFont->DrawTextA(
                 gSprite,
-                "CarbonRhythm v0.x",
+                "CarbonRhythm v1.0.1",
                 -1,
                 &titleRect,
                 DT_LEFT | DT_NOCLIP,
