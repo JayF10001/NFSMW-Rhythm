@@ -40,6 +40,4 @@ namespace Input
         if (lane >= 0 && lane < 6)
             gKeyCodes[lane] = vk;
     }
-
-
 }

@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Local SDKs
+DX9SDK/
+BASS/
+json-develop/
+DXSDK/

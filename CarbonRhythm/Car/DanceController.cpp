@@ -35,11 +35,18 @@ static float gSpinAngle = 0.0f;
 static float gSpinProgress = 0.0f;
 
 
-static float EaseInOutQuart(float t)
+static float EaseInOutExpo(float t)
 {
-    return (t < 0.5f)
-        ? 8.0f * t * t * t * t
-        : 1.0f - 8.0f * (--t) * t * t * t;
+    if (t == 0.0f)
+        return 0.0f;
+
+    if (t == 1.0f)
+        return 1.0f;
+
+    if (t < 0.5f)
+        return powf(2.0f, 20.0f * t - 10.0f) / 2.0f;
+    else
+        return (2.0f - powf(2.0f, -20.0f * t + 10.0f)) / 2.0f;
 }
 
 static JellyEaseType gJellyEase = JellyEaseType::EaseOut;
@@ -101,8 +108,8 @@ namespace Dance
         CarMatrix.z.y = cx * sy * sz + sx * cz;
         CarMatrix.z.z = cx * cy;
 
-        float horiz = EaseInOutQuart(1.0f - gJellyState);
-        float vert = EaseInOutQuart(gJellyState);
+        float horiz = EaseInOutExpo(1.0f - gJellyState);
+        float vert = EaseInOutExpo(gJellyState);
 
         CarMatrix.x.x *= 1.0f + horiz * 0.3f;
         CarMatrix.y.y *= 1.0f + horiz * 0.3f;

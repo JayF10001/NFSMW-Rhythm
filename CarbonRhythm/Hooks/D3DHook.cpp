@@ -88,7 +88,7 @@ HRESULT __stdcall hkEndScene(IDirect3DDevice9* pDevice)
         break;
 
     case GameState::Recording:
-        Recorder::Update();   // <<< WAJIB dipanggil selalu
+        Recorder::Update();
 
         if (Recorder::GetState() == Recorder::RecorderState::Idle)
         {

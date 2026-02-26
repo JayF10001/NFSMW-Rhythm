@@ -159,9 +159,6 @@
     <ClInclude Include="Rhythm\BeatmapLoader.h" />
     <ClInclude Include="Rhythm\BeatmapRecorder.h" />
     <ClInclude Include="Rhythm\Input.h" />
-    <ClInclude Include="Rhythm\Judge.h" />
-    <ClInclude Include="Rhythm\Metronome.h" />
-    <ClInclude Include="Rhythm\MusicPlayer.h" />
     <ClInclude Include="Rhythm\RhythmSystem.h" />
     <ClInclude Include="Rhythm\ScoreSystem.h" />
     <ClInclude Include="UI\MenuSystem.h" />
@@ -185,9 +182,6 @@
     <ClCompile Include="Rhythm\BeatmapLoader.cpp" />
     <ClCompile Include="Rhythm\BeatmapRecorder.cpp" />
     <ClCompile Include="Rhythm\Input.cpp" />
-    <ClCompile Include="Rhythm\Judge.cpp" />
-    <ClCompile Include="Rhythm\Metronome.cpp" />
-    <ClCompile Include="Rhythm\MusicPlayer.cpp" />
     <ClCompile Include="Rhythm\RhythmSystem.cpp" />
     <ClCompile Include="Rhythm\ScoreSystem.cpp" />
     <ClCompile Include="UI\MenuSystem.cpp" />
