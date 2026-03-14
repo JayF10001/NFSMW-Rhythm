@@ -10,8 +10,8 @@ struct Matrix4
     struct { float x, y, z, w; } x, y, z, p;
 };
 
-// auto& CarMatrix = *(Matrix4*)0xB778D0; // nfsc: 0xB778D0, nfsmw: 0xB778D0
-auto& CarMatrix = *(Matrix4*)0x9B34B0; // nfsc: 0xB778D0, nfsmw: 0x9B34D0
+// auto& CarMatrix = *(Matrix4*)0xB778D0; // nfsc: 0xB778D0
+auto& CarMatrix = *(Matrix4*)0x9B34B0; // nfsmw: 0x9B34B0
 
 static bool gEnabled = false;
 static bool gPrevF2 = false;
