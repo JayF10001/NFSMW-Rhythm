@@ -362,11 +362,11 @@ namespace Menu
 
             gFont->DrawTextA(
                 gSprite,
-                "CarbonRhythm v1.0.1",
+                "MWRhythm v1.0.1",
                 -1,
                 &titleRect,
                 DT_LEFT | DT_NOCLIP,
-                D3DCOLOR_ARGB(255, 255, 255, 0)
+                D3DCOLOR_ARGB(255, 0, 255, 0) //A R G B
             );
 
             for (int i = 0; i < (int)gMainItems.size(); i++)
@@ -395,7 +395,7 @@ namespace Menu
                 RECT localRect = { 0, 0, 600, 100 };
 
                 D3DCOLOR color = (i == gSelection)
-                    ? D3DCOLOR_ARGB(255, 0, 255, 255)
+                    ? D3DCOLOR_ARGB(255, 179, 122, 40) // 选中项 B37A28
                     : D3DCOLOR_ARGB(255, 255, 255, 255);
 
                 gFont->DrawTextA(
@@ -419,7 +419,7 @@ namespace Menu
                 -1,
                 &titleRect,
                 DT_LEFT | DT_NOCLIP,
-                D3DCOLOR_ARGB(255, 255, 255, 0)
+                D3DCOLOR_ARGB(255, 0, 255, 0)
             );
 
             int end = min(
@@ -459,7 +459,7 @@ namespace Menu
                 RECT localRect = { 0, 0, 600, 110 };
 
                 D3DCOLOR mainColor = (i == gBeatmapSelection)
-                    ? D3DCOLOR_ARGB(255, 0, 255, 255)
+                    ? D3DCOLOR_ARGB(255, 179, 122, 40) // 选中项 B37A28
                     : D3DCOLOR_ARGB(255, 255, 255, 255);
 
                 std::string mainLine =
