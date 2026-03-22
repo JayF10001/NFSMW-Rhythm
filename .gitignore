@@ -367,3 +367,7 @@ DX9SDK/
 BASS/
 json-develop/
 DXSDK/
+
+#local markdown
+maps.md
+setup.md
