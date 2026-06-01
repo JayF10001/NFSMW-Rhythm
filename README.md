@@ -1,7 +1,8 @@
 # MWRhythm
 
-MWRhythm is a fork of CarbonRhythm, a rhythm "minigame" mod originally built for Need for Speed: Carbon.  
-This fork ports the plugin from NFS: Carbon to Need for Speed: Most Wanted (NFSMW).
+MWRhythm is a fork of CarbonRhythm, a rhythm "minigame" mod originally built for Need for Speed: Carbon.
+This is my version just to commit changes to the Main Fork.
+This fork ports the plugin from Need for Speed:Carbon, to Need for Speed: Most Wanted (NFSMW).
 
 ---
 
@@ -9,12 +10,19 @@ This fork ports the plugin from NFS: Carbon to Need for Speed: Most Wanted (NFSM
 
 - 6-lane rhythm input system
 - Car animations
-- Beat-synced scrolling notes
+  - They change depending on BPM
+  - Every key start the Animation. Or Extends the previous one.
+- Beat-based System for note scrolling
+  - Has dynamic Scaling depending on Screen Resolution
+  - Scrolling speed changes depending on BPM
 - Judgement system (Perfect / Good / Bad / Miss)
 - Combo and multiplier system
+- Hit Sounds!
 - Accuracy calculation
 - Custom beatmap support
+  - Support for changingBPM of a song, while it is still playing 
 - Visual overlay with animated UI elements
+- Simple AutoPlay System [not perfect but it gets the job done], by default on F1
 
 ---
 
