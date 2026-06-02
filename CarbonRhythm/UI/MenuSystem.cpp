@@ -369,7 +369,7 @@ namespace Menu
 
             gFont->DrawTextA(
                 gSprite,
-                "MWRhythm v1.0.1",
+                "MWRhythm v1.0.2",
                 -1,
                 &titleRect,
                 DT_LEFT | DT_NOCLIP,
