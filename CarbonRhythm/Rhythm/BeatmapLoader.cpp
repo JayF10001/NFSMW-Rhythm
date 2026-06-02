@@ -4,6 +4,9 @@
 #include <fstream>
 #include <External/json.hpp>
 #include <Windows.h>
+#include <algorithm>
+#include <string>
+#include <vector>
 #include "../Car/DanceController.h"
 
 
@@ -32,6 +35,30 @@ namespace Beatmap
         double perfect = 0.08;
         double good = 0.1;
         double bad = 0.14;
+
+		if (j.contains("bpmChanges") && j["bpmChanges"].is_array())
+		{
+			std::vector<Rhythm::BPMChange> changes;
+			for (auto& item : j["bpmChanges"])
+			{
+				if (item.contains("time") && item.contains("bpm"))
+				{
+					Rhythm::BPMChange change;
+					change.time = item["time"];
+					change.bpm  = item["bpm"];
+					changes.push_back(change);
+				}
+			}
+			// Sort by time
+			std::sort(changes.begin(), changes.end(),
+				[](const Rhythm::BPMChange& a, const Rhythm::BPMChange& b) { return a.time < b.time; });
+			Rhythm::SetBPMChanges(changes);
+		}
+		else
+		{
+			// If there's no table, Use Static BPM [like previously]
+			Rhythm::SetBPMChanges({});
+		}
 
         if (j.contains("difficulty"))
         {

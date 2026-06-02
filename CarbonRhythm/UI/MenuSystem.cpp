@@ -46,6 +46,11 @@ namespace
     static std::vector<BeatmapEntry> gBeatmaps;
     static int gBeatmapSelection = 0;
 
+	static float g_autoplayMsgTimer = 0.0f;  	// Auto-play message stuff
+	static std::string g_autoplayMsg = "";
+	static bool g_lastAutoplayState = false;
+	static float g_menuDt = 0.0f;				// Auto-play message stuff
+
     enum class MenuState
     {
         Main,
@@ -133,6 +138,8 @@ namespace Menu
 
     void Update(float dt)
     {
+		g_menuDt = dt;
+
         if (gItemScale.size() != gMainItems.size())
         {
             gItemScale.resize(gMainItems.size(), 1.0f);
@@ -406,6 +413,7 @@ namespace Menu
                     DT_LEFT | DT_NOCLIP,
                     color
                 );
+
             }
             gSprite->SetTransform(&identity);
         }
@@ -501,6 +509,27 @@ namespace Menu
             gSprite->SetTransform(&identity);
 
         }
+
+		// Autoplay message (works in both MainMenu and BeatmapSelect states)
+		bool currentAutoplay = Rhythm::IsAutoplayEnabled();
+		if (currentAutoplay != g_lastAutoplayState)
+		{
+			g_lastAutoplayState = currentAutoplay;
+			g_autoplayMsgTimer = 2.0f;
+			g_autoplayMsg = currentAutoplay ? "AUTOPLAY ON" : "AUTOPLAY OFF";
+		}
+
+		if (g_autoplayMsgTimer > 0.0f && gFont)
+		{
+			g_autoplayMsgTimer -= g_menuDt;
+			float alpha = 1.0f;
+			if (g_autoplayMsgTimer < 1.0f)
+				alpha = g_autoplayMsgTimer;
+			D3DCOLOR color = D3DCOLOR_ARGB((int)(alpha * 255), 0, 255, 0);
+			RECT rect = { (LONG)screenW - 250, 20, (LONG)screenW, 60 };
+			gSprite->SetTransform(&identity);   // identity is already defined earlier in Render()
+			gFont->DrawTextA(gSprite, g_autoplayMsg.c_str(), -1, &rect, DT_LEFT | DT_NOCLIP, color);
+		}
 
         gSprite->End();
     }

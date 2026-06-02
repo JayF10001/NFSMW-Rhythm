@@ -11,6 +11,7 @@ namespace Config
         int MenuDown;
         int MenuLeft;
         int MenuRight;
+        int AutoplayToggle;
 
         // ===== RECORDER =====
         int StartRecording;
@@ -36,6 +37,7 @@ namespace Config
             double InputSpeed = 5.0;
             double SpinLinearSpeed = 0.3;
             double SpinEaseSpeed = 2.0;
+            bool SyncJellyToCurrentBPM = true;
         };
 
 

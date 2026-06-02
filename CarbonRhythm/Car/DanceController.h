@@ -33,5 +33,6 @@ namespace Dance
     bool IsEnabled();
     void SetEnabled(bool state);
     void SetJellyEase(JellyEaseType type);
+	void SetJellyBPM(float bpm);
     static float ApplyEase(float t);
 }

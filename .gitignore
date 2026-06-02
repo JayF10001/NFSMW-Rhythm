@@ -363,6 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Local SDKs
+ThirdParty/
 DX9SDK/
 BASS/
 json-develop/
@@ -376,3 +377,9 @@ setup.md
 _docs/
 _references/
 _forfun/
+
+# Local test beatmaps
+CarbonRhythmAssets/maps/*_dynamic_bpm_test.json
+
+# Local runtime config
+CarbonRhythm.ini

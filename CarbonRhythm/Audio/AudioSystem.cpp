@@ -66,4 +66,23 @@ namespace Audio
         if (!gStream) return true;
         return BASS_ChannelIsActive(gStream) == BASS_ACTIVE_STOPPED;
     }
+
+	void Audio::PlayOnce(const std::string& path, float volume) //Code needed to play Hit-Sounds
+	{
+		HSTREAM stream = BASS_StreamCreateFile(FALSE, path.c_str(), 0, 0, BASS_STREAM_PRESCAN);
+		if (stream)
+		{
+			BASS_ChannelSetAttribute(stream, BASS_ATTRIB_VOL, volume);
+
+			// Sync after playback ends to free the stream. Otherwise this might cause memory leak.
+			BASS_ChannelSetSync(stream, BASS_SYNC_END, 0,
+				[](HSYNC, DWORD, DWORD, void* user) {
+					HSTREAM s = reinterpret_cast<HSTREAM>(user);
+					BASS_StreamFree(s);
+				},
+				reinterpret_cast<void*>(stream));   // <-- key change: casting to void*
+
+			BASS_ChannelPlay(stream, FALSE);
+		}
+	}
 }

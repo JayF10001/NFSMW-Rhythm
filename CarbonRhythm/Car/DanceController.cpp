@@ -154,19 +154,25 @@ namespace Dance
 
         int pressed = Input::GetPressedMask();
 
-        // slow spin trigger
-        if ((pressed & (1 << 0)) && !gSpinLinearActive)
-        {
-            gSpinLinearActive = true;
-            gSpinAngle = 0.0f;
-        }
+        // slow spin trigger (lane 0) - cancel any quick spin and restart cleanly
+		if (pressed & (1 << 0))
+		{
+			gSpinLinearActive = true;
+			gSpinAngle = 0.0f;
+			gSpinEaseActive = false;
+			gSpinProgress = 0.0f;
+			gRotZ = 0.0f;
+		}
 
-        // quick spin trigger
-        if ((pressed & (1 << 5)) && !gSpinEaseActive)
-        {
-            gSpinEaseActive = true;
-            gSpinProgress = 0.0f;
-        }
+		// quick spin trigger (lane 5) - cancel any slow spin and restart cleanly
+		if (pressed & (1 << 5))
+		{
+			gSpinEaseActive = true;
+			gSpinProgress = 0.0f;
+			gSpinLinearActive = false;
+			gSpinAngle = 0.0f;
+			gRotZ = 0.0f;
+		}
 
         // LINEAR SPIN
         if (gSpinLinearActive)
@@ -270,6 +276,7 @@ namespace Dance
         gInputSpeed = inputSpeed;
         gSpinLinearSpeed = spinLinearSpeed;
         gSpinEaseSpeed = spinEaseSpeed;
+        gJellySpeed = gJellyBPM / 30.0f;
     }
 
     void SetJellyEase(JellyEaseType type)
@@ -319,5 +326,10 @@ namespace Dance
     return t;
 }
 
+void Dance::SetJellyBPM(float bpm)
+{
+    gJellyBPM = bpm;
+    gJellySpeed = gJellyBPM / 30.0f;
+}
 
 }

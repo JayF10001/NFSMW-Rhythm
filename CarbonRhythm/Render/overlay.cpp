@@ -31,6 +31,13 @@ const float COMBO_X_RATIO = 0.8f;
 static float gLaneFlashInput[6] = { 0 };
 static float gNoteHitFlash[6] = { 0 };
 
+// static float gSmoothedSpeed = 500.0f;
+// static const float SMOOTH_FACTOR = 0.15f;   // the lower, the slower reaction //Old Code for the previous Note Scrolling system. Can be safely deleted, unless you want to go back to the old one, which has issues with ChangingBPM.
+
+static float g_autoplayMsgTimer = 0.0f;  // Auto-play Support
+static std::string g_autoplayMsg = "";
+static bool g_lastAutoplayState = false;
+
 void Overlay::Render(IDirect3DDevice9* device)
 {
     if (!device)
@@ -43,11 +50,17 @@ void Overlay::Render(IDirect3DDevice9* device)
     double secondsPerBeat = Rhythm::GetSecondsPerBeat();
     double visibleRange = secondsPerBeat * 4.0; // tampilkan 4 beat ke depan
 
+	double currentBeat = Rhythm::GetBeatTime();
+	// const float pixelsPerBeat = 150.0f;   // const //Old Code for the previous Note Scrolling system
+
     D3DVIEWPORT9 vp;
     device->GetViewport(&vp);
 
     float screenW = (float)vp.Width;
     float screenH = (float)vp.Height;
+
+	float landingY = screenH - 160.0f;
+	float hitLineY = landingY;            // const
 
     if (!gFont)
     {
@@ -164,8 +177,33 @@ void Overlay::Render(IDirect3DDevice9* device)
 
     gSprite->Begin(D3DXSPRITE_ALPHABLEND);
 
-    D3DXMATRIX identity;
+	D3DXMATRIX identity;
     D3DXMatrixIdentity(&identity);
+
+	// Autoplay message
+    float dtMsg = Rhythm::GetDeltaTime();
+    bool currentAutoplay = Rhythm::IsAutoplayEnabled();
+    static float msgTimer = 0.0f;
+    static std::string msgText = "";
+    static bool lastState = false;
+
+    if (currentAutoplay != lastState)
+    {
+        lastState = currentAutoplay;
+        msgTimer = 2.0f;
+        msgText = currentAutoplay ? "AUTOPLAY ON" : "AUTOPLAY OFF";
+    }
+
+    if (msgTimer > 0.0f && gFont)
+    {
+        msgTimer -= dtMsg;
+        float alpha = 1.0f;
+        if (msgTimer < 1.0f) alpha = msgTimer; // fade out
+        D3DCOLOR color = D3DCOLOR_ARGB((int)(alpha * 255), 0, 255, 0);
+        RECT rect = { (LONG)screenW - 250, 20, (LONG)screenW, 60 };
+        gSprite->SetTransform(&identity); // make sure that the transformation is identity-based
+        gFont->DrawTextA(gSprite, msgText.c_str(), -1, &rect, DT_LEFT | DT_NOCLIP, color);
+    }
 
     D3DSURFACE_DESC desc;
     gOverlayTex->GetLevelDesc(0, &desc);
@@ -200,7 +238,6 @@ void Overlay::Render(IDirect3DDevice9* device)
     float laneSpacing = 140.0f;
     float totalLaneWidth = laneSpacing * 5.0f;
     float startX = (screenW * 0.5f) - (totalLaneWidth * 0.5f);
-    float landingY = screenH - 160.0f;
 
     gSprite->SetTransform(&identity);
 
@@ -252,32 +289,30 @@ void Overlay::Render(IDirect3DDevice9* device)
             D3DCOLOR_ARGB(255, 255, 255, 255)
         );
     }
-    
 
-    // SCROLLNOTE
-    float pixelsPerSecond = 500.0f;
-    float hitLineY = landingY;
+
+    // ----- Beat-based scrolling (no speed jumps) -----
+
+    // Auto-scale pixels per beat based on screen height and visible beats [requires more testing, Especially on a 4K Screen]
+    const float visibleBeats = 6.0f;     				// how many beats visible on screen at once, 12 is slow.
+    float pixelsPerBeat = screenH / visibleBeats;  		// dynamic scaling, no user config needed
 
     for (int i = 0; i < 16; i++)
     {
         int index = Rhythm::GetCurrentNoteIndex() + i;
         if (!Rhythm::IsNoteValid(index)) break;
 
-        double noteTime = Rhythm::GetNoteTime(index);
-        double timeDiff = noteTime - currentTime;
-
-        if (Rhythm::IsNoteHit(index) &&
-            Rhythm::GetNoteHitVisualTimer(index) <= 0.0f)
+		if (Rhythm::IsNoteHit(index) && Rhythm::GetNoteHitVisualTimer(index) <= 0.0f)
             continue;
 
-        float noteY = hitLineY - (float)(timeDiff * pixelsPerSecond);
+        float noteBeat = (float)Rhythm::GetNoteBeat(index);
+        float beatDiff = noteBeat - (float)currentBeat;
+        float noteY = hitLineY - beatDiff * pixelsPerBeat;
 
-        if (noteY < -100) continue;
-        if (noteY > screenH + 100) continue;
+        if (noteY < -100 || noteY > screenH + 100) continue;
 
         int laneIndex = 0;
         int mask = Rhythm::GetNoteKeyMask(index);
-
         for (int k = 0; k < 6; k++)
             if (mask & (1 << k)) { laneIndex = k; break; }
 
@@ -314,6 +349,7 @@ void Overlay::Render(IDirect3DDevice9* device)
         bool isFlash = false;
 
         LPDIRECT3DTEXTURE9 texToUse = gArrowTex[laneIndex];
+		if (!gArrowTex[laneIndex]) continue;
 
         gSprite->Draw(
             texToUse,
@@ -526,8 +562,8 @@ void Overlay::Render(IDirect3DDevice9* device)
     // 5️⃣ Score text (paling akhir)
     if (gFont)
     {
-        
-    }   
+
+    }
 }
 
 void Overlay::OnLostDevice()

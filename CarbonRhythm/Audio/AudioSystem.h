@@ -9,4 +9,5 @@ namespace Audio
     void Stop();
     double GetPositionSeconds();
     bool IsFinished();
+	void PlayOnce(const std::string& path, float volume = 1.0f); //Code needed to play Hit-Sounds
 }

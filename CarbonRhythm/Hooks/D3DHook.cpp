@@ -34,6 +34,14 @@ HRESULT __stdcall hkEndScene(IDirect3DDevice9* pDevice)
 
     HRESULT result = oEndScene(pDevice);
 
+	static bool gPrevAutoplayToggle = false;
+    bool autoplayToggle = (GetAsyncKeyState(keys.AutoplayToggle) & 0x8000) != 0;
+    if (autoplayToggle && !gPrevAutoplayToggle)
+    {
+        Rhythm::ToggleAutoplay();
+    }
+    gPrevAutoplayToggle = autoplayToggle;
+
     // ===== time delta =====
     static uint64_t lastCounter = 0;
     float dt = GameTime::DeltaSeconds(lastCounter);
@@ -161,6 +169,6 @@ void D3DHook::Initialize()
     MH_CreateHook(vtable[42], hkEndScene, reinterpret_cast<void**>(&oEndScene));
     MH_CreateHook(vtable[16], hkReset, reinterpret_cast<void**>(&oReset));
     MH_EnableHook(MH_ALL_HOOKS);
-    
-    
+
+
 }

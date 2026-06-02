@@ -81,6 +81,7 @@ namespace Config
         gKeys.MenuDown = ReadInt("Keybinds", "MenuDown", VK_DOWN);
         gKeys.MenuLeft = ReadInt("Keybinds", "MenuLeft", VK_LEFT);
         gKeys.MenuRight = ReadInt("Keybinds", "MenuRight", VK_RIGHT);
+        gKeys.AutoplayToggle = ReadInt("Keybinds", "AutoplayToggle", VK_F1);
 
         // ===== RECORDER SETTINGS =====
         gRecorder.AudioPath = ReadString("Recorder", "AudioPath", "song.mp3");
@@ -107,6 +108,8 @@ namespace Config
             ReadDouble("Dance", "SpinLinearSpeed", 0.3);
         gRecorder.Dance.SpinEaseSpeed =
             ReadDouble("Dance", "SpinEaseSpeed", 2.0);
+        gRecorder.Dance.SyncJellyToCurrentBPM =
+            ReadInt("Dance", "SyncJellyToCurrentBPM", 1) != 0;
         gRecorder.Title =
             ReadString("Metadata", "Title", "Untitled");
 

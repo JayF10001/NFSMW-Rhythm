@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>D:\DXSDK_Jun10\Include;D:\DXSDK_Jun10\Lib\x86;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir);$(SolutionDir)MinHook\include;$(SolutionDir)DX9SDK\Include;$(SolutionDir)BASS\c;$(SolutionDir)json-develop\include</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)..\ThirdParty\include;$(ProjectDir)..\ThirdParty\DX9SDK\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
     <TargetExt>.asi</TargetExt>
-    <LibraryPath>D:\DXSDK_Jun10\Lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)..\ThirdParty\lib;$(ProjectDir)..\ThirdParty\DX9SDK\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -104,15 +104,15 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalIncludeDirectories>D:\DXSDK_Jun10\Lib\x86;D:\Projects\Black Box\CarbonRhythm-1.0.1\ThirdParty\lib;D:\Projects\Black Box\CarbonRhythm-1.0.1\ThirdParty\include;D:\Projects\Black Box\CarbonRhythm-1.0.1\ThirdParty\bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\ThirdParty\include;$(ProjectDir)..\ThirdParty\DX9SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);libMinHook.x86.lib;d3dx9.lib;bass.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\Projects\Black Box\CarbonRhythm-1.0.1\ThirdParty\lib;$(SolutionDir)MinHook\build\VC17\lib\Release;$(SolutionDir)DX9SDK\Lib\x86;$(SolutionDir)BASS\c</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libMinHook.x86.lib;d3dx9.lib;bass.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\lib;$(ProjectDir)..\ThirdParty\DX9SDK\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
