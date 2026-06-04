@@ -1,7 +1,6 @@
 # MWRhythm
 
 MWRhythm is a fork of CarbonRhythm, a rhythm "minigame" mod originally built for Need for Speed: Carbon.
-This is my version just to commit changes to the Main Fork.
 This fork ports the plugin from Need for Speed:Carbon, to Need for Speed: Most Wanted (NFSMW).
 
 ---
@@ -43,7 +42,8 @@ Git; see [BUILD.md](BUILD.md) for the expected layout.
 ## Credits
 
 - **giovannosaur** - Original author of CarbonRhythm
-
+- **ShifterSc** - Porting CarbonRhythm to Need for Speed: Most Wanted
+- **ShifterSC & Szymkim2134** - Later maintenance
 ---
 
 ## License
